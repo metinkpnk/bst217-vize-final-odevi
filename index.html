@@ -1,0 +1,291 @@
+<head>
+    <link rel="stylesheet" type="text/css" href="index.css">
+    </head>
+
+<h2>METİN KEPENEK 21430070050</h2>
+<div class="tanitim">
+    
+    <h1>REACT İLE TİC TAC TOE OYUNU YAPIMI</h1>
+	<p>
+		<a href="https://www.youtube.com/watch?v=nXLlcoOEzhQ">PROGRAMIN KODLARINA GİTMEK İÇİN TIKLAYIMIZ - TIKLA</a>
+	</p>
+</div>
+
+<div class="konteynir">
+    <h2>Ne kodlayacağız?</h2>
+    <p>Bu sayfada, React ile bir tic-tac-toe (XOX oyunu) nasıl geliştirilir onu göstereceğiz.</p>
+	<h2>React Nedir?</h2>
+    <p> React, kullanıcı arayüzü (UI) oluşturmak için kullanılan en popüler JavaScript kütüphanesidir. Web siteleri işlemek için kullanıcı çıktısına harika yanıt sunan bir yöntemi kullanır. Bu aracın bileşenleri Facebook tarafından geliştirilmiştir. 2013'de açık kaynaklı bir JavaScript olarak piyasaya sürülmüştür.</p>
+     <h2>Başlangıç Kodunun İncelenmesi</h2>
+     <p>Kodu incelediğinizde aşağıdaki 3 React bileşenini fark edeceksiniz:</p>
+     <p>Square (Kare)</p>
+     <p>Board (Tahta)</p>
+     <p>Game (Oyun)</p>
+     <p>Şu an Square bileşeni yalnızca bir adet button elemanını, Board ise 9 adet Square bileşenini render ediyor. Game bileşeni ise Board bileşenini render ediyor.</p>
+    <h2>Prop’lar Aracılığıyla Veri Aktarımı</h2>
+    <p> Board bileşeninden Square bileşenimize bazı verileri göndermeyi deneyelim.Board bileşeninin renderSquare metodunda, value prop’unu Square bileşenine gönderecek şekilde kodu yazalım:</p>
+   <div class="code">
+    <code>class Board extends React.Component {</code>
+   <p> <code>renderSquare(i) {</code></p>
+    <p><code> return <Square value={i} />;</code></p>
+    <p><code>}</code></p>
+   <p><code>}</code></p>
+</div>
+<p>Square bileşeninin render metodunu, ilgili değeri göstermesi  {this.props.value} yazalım:</p>
+
+<div class="code">
+<p><code>class Square extends React.Component {</code></p>
+<p><code>render() {</code></p>
+<p><code> return (</code></p>
+<p><code> button className="square"> </code></p>
+ <p><code>{this.props.value}</code></p>
+<p><code> /button> </code></p>
+<p><code>  );</code></p>
+<p><code>}</code></p>
+<p><code>}</code></p>
+</div>
+
+<p>Board bileşeninden Square bileşenine “prop ile veri geçirmeyi” yaptık. React uygulamalarında prop’ların üst bileşenden alt bileşene geçişi sayesinde veri akışının oluşması sağlanır.</p>
+<h2>Etkileşimli bir Bileşen Yapımı</h2>
+<p>Şimdi Square bileşenine tıkladığımızda içini “X” ile dolduralım. Öncelikle, Square bileşeninin render() fonksiyonundan dönen button etiketini bu şekilde yazalım:</p>
+
+<div class="code">
+    <p><code>class Square extends React.Component {</code></p>
+    <p><code>render() {</code></p>
+    <p><code> return (</code></p>
+    <p><code> button className="square" onClick={function() { console.log('click'); }}> </code></p> 
+     <p><code>{this.props.value}</code></p>
+    <p><code> /button> </code></p>
+    <p><code>  ); </code></p>
+    <p><code>}</code></p>
+    <p><code>}</code></p>
+    </div>
+
+<div class="note">
+<h2>NOT:</h2>
+<p>Farkedeceğiniz üzere, onClick={() => console.log('click')} kısmında butonun onClick prop’una bir fonksiyon ataması gerçekleştiriyoruz. Bu fonksiyon sadece butona tıkladığımızda çalışıyor.</p>
+
+</div>
+<p>Sonraki adımda Square bileşeninin, tıklandığı durumu “hatırlamasını” ve “X” işareti ile doldurulmasını sağlayacağız. Bir şeyleri “hatırlamak” için bileşenler state (durum)‘u kullanırlar.
+
+    React bileşenleri, constructor (yapıcı) fonksiyonlarında this.state‘e atama yaparak bir state’e sahip olurlar. React bileşeni içerisinde tanımlanan this.state özelliğinin erişim belirleyicisi private olarak düşünülmelidir. Çünkü sadece o bileşene özeldir ve diğer bileşenler tarafından direkt olarak erişilemezler.
+    
+    Şimdi Square’in mevcut değerini this.state içerisinde saklayalım ve Square’e tıklandığında değiştirelim. Bunun için öncelikle Square sınıfına bir constructor ekleyeceğiz ve içerisinde state’in başlangıç değerlerini oluşturacağız:</p>
+    <div class="code"> 
+<p><code>constructor(props) {</code></p>
+<p><code>super(props);</code></p>
+<p><code>this.state = {</code></p>
+<p><code>value: null,</code></p>
+<p><code> };</code></p>
+<p><code> }</code></p>
+
+</div>
+
+<div class="note">
+    <h2>NOT:</h2>
+    <p>Not:
+
+        JavaScript class’larında, alt sınıfın constructor’ını oluştururken her zaman super fonksiyonunu çağırmanız gerekmektedir. constructor metodu olan her bir React sınıf bileşeninde, constructor metodu super(props) çağrısı ile başlamalıdır.</p>
+    
+    </div>
+    <p>Şimdi, Square’e tıklanıldığında, state’indeki value değerinin render metodunda görüntülenebilmesi için aşağıdaki adımları izleyelim:</p>
+    <p> button etiketi içerisine this.state.value yazalım.</p>
+<p> () => this.setState({value: 'X'}) yazalı.</p>
+<p>Bu değişikliklerden sonra Square’in render metodundan dönen button etiketi aşağıdaki gibi görüntülenecektir:</p>
+
+<div class="code"> 
+    <p><code> render() {</code></p>
+    <p><code> return (</code></p>
+    <p><code>button</code></p>
+    <p><code>className="square"</code></p>
+    <p><code> onClick={() => this.setState({value: 'X'})}</code></p>
+    <p><code>  ></code></p>
+    <p><code></code></p>
+    <p><code>{this.state.value}</code></p>
+    <p><code> /button></code></p>
+    
+    </div>
+<p>Square’in render metodundaki onClick metodundan, this.setState‘in çağrılmasını sağladık. Bu sayede Square’deki button elemanına her tıklandığında React, Square bileşenini tekrar render edecektir. Güncelleme sonrasında Square’in this.state.value değerine 'X' ataması gerçekleşecektir, ve bu sayede oyun tahtasında ‘X”i göreceğiz.</p>
+   <h2>Oyunun Tamamlanması</h2> 
+   <p>Artık tic-tac-toe oyunumuz için temel kod bloklarına sahibiz. Oyunun tamamlanması için tahta üzerinde “X” ve “O“‘ların birbiri ardına yerleştirilmesi gerekiyor. Sonrasında oyunda bir kazananın belirlenmesi için değişiklikler yapılmasına ihtiyaç var.</p>
+
+   <p>Board’a bir constructor ekleyelim ve Board’un başlangıç state’ine bir dizi atayarak içerisinde 9 adet null değerinin bulunmasını sağlayalım. 9 kareye, 9 adet null karşılık gelecektir:</p>
+   
+   <div class="code"> 
+    <p><code>constructor(props) {</code></p>
+    <p><code>super(props);</code></p>
+    <p><code>this.state = {</code></p>
+    <p><code>squares: Array(9).fill(null),</code></p>
+    <p><code> };</code></p>
+    <p><code> }</code></p>
+    
+    </div>
+
+    <p>Daha sonra Board’u doldurdukça, this.state.squares dizisinin içeriği aşağıdaki gibi görünmeye başlayacaktır:</p>
+
+    <div class="code"> 
+        <p><code> [</code></p>
+        <p><code>O', null, 'X',</code></p>
+        <p><code>'X', 'X', 'O',</code></p>
+        <p><code>'O', null, null,</code></p>
+        <p><code> ]</code></p>
+      
+        
+        </div>
+        <p>Projeye başladığımızda, 0’dan 8’e kadar olan sayıları her bir karede göstermek için, Board’daki value prop’unu alt bileşenlere aktarmıştık. Bir diğer önceki aşamada ise sayıların yerine mevcut Square bileşeninin kendi state’i tarafından belirlenen “X” işaretinin almasını sağlamıştık. İşte bu nedenle Square bileşeni, Board tarafından kendisine gönderilen value prop’unu göz ardı ediyor.</p>
+
+          <p>  Şimdi prop aktarma mekanizmasını tekrar kullanacağız. Bunun için her bir Square’e kendi mevcut değerini ('X', 'O', or null) atamak için Board bileşeninde değişiklik yapalım. Board’un constructor’ında halihazırda tanımladığımız bir squares dizisi bulunuyor. Board’un renderSquare metodunu, bu diziden verileri alacak şekilde değiştirelim:</p>
+   
+          <div class="code"> 
+            <p><code> renderSquare(i) {</code></p>
+          <p><code> return Square value={this.state.squares[i]} />; </code></p> -->
+            <p><code> }</code></p>
+    
+            </div>
+            <p>  Şimdi Square’e tıklandığında ne olacağına karar vermemiz gerekiyor. Board bileşeni artık hangi Square’in doldurulacağına karar verebildiğine göre, Square’e tıklandığında Board bileşeninin state’inin güncellenmesini sağlamalıyız. State her bir bileşene private olduğundan dolayı Square üzerinden direkt olarak Board’un state’ini değiştiremeyiz.
+                
+                Board’un state’inin gizliliğini korumak için, Board’dan Square’e bir fonksiyon aktarmamız gerekiyor. Square’e her tıklama anında bu fonksiyonun otomatik olarak çağrısı gerçekleşecektir. Şimdi Board’un renderSquare metodunu aşağıdaki şekilde değiştirelim:</p>
+
+                <div class="code"> 
+                    <p><code> renderSquare(i) {</code></p>
+                  <p><code> return Square value={this.state.squares[i]} />; </code></p>
+                  <p>onClick={() => this.handleClick(i)}</p>
+                  <p><code> }</code></p>
+                    </div>
+<p>Artık Board’dan Square’e, value ve onClick olmak üzere iki tane prop gönderiyoruz. Square’e tıklandığında ise prop olarak gelen onClick fonksiyonu çağrılmasına ihtiyacımız var. Bunun için Square’e aşağıdaki değişiklikleri uygulamamız gerekiyor:</p>
+<p>Square’in render metodu içerisinde yer alan this.state.value yerine this.props.value yazınız.</p>
+<p>Yine Square’in render metodundaki this.setState() yerine this.props.onClick() yazınız.</p>
+<p>Square artık oyunun state’ini değiştirmeyeceği için, Square’in constructor metodunu siliniz.</p>
+
+<div class="code"> 
+    <p><code> button> </code></p>
+<p><code>className="square"</code></p>
+<p><code>onClick={() => this.props.onClick()}</code></p>
+<p><code>></code></p>
+<p><code>{this.props.value}</code></p>
+<p><code> /button> </code></p>
+
+    </div>
+    <p>Artık Square’e tıklandığında, Board tarafından aktarılan onClick fonksiyonu çağrılacaktır.</p>
+
+    <h2>Fonksiyon Bileşenleri</h2>
+<p>React’te fonksiyon bileşenleri, sadece render metodunu içerirler. İçerisinde herhangi bir state bulundurmadıkları için daha kolay bir şekilde bileşen oluşturmayı sağlarlar</p>
+<p>Square sınıfını aşağıdaki fonksiyon ile değiştirelim:</p>
+
+<div class="code"> 
+    <p><code> function Square(props) { </code></p>
+<p><code>return (</code></p>
+<p><code> button className="square" onClick={props.onClick}></code></p>
+<p><code>{props.value}</code></p>
+<p><code> /button></code></p>
+<p><code> );</code></p>
+<p><code>}</code></p>
+</div>
+    <p>Dikkat edecek olursanız sınıf bileşeninde kullandığımız this.props ifadesi yerine sadece props‘u kullandık.</p>
+<h1>Hamle Sırası Değişikliği</h1>
+<p>Şimdi tic-tac-toe oyunumuzdaki hatayı çözmemiz gerekiyor. Oyunun son hali ile sadece “X” eklenebiliyor ama “O” eklenemiyor.</p>
+<p>Oyuna varsayılan olarak “X” başlıyor. X’in ilk başlayıp/başlamayacağını Board’un constructor’ındaki başlangıç state’inde belirleyebiliriz:</p>
+
+<div class="code"> 
+    <p><code>constructor(props) {</code></p>
+    <p><code>super(props);</code></p>
+    <p><code>this.state = {</code></p>
+    <p><code>squares: Array(9).fill(null),</code></p>
+    <p> <code>xIsNext: true,</code></p>
+    <p><code> };</code></p>
+    <p><code> }</code></p>
+    
+    </div>
+    <p>Herhangi bir oyuncu hamlesini yaptığında xIsNext (xSonrakiElemanMı) boolean değişkeninin tersini alarak hangi oyuncunun sonraki hamleyi yapacağını belirleyebiliriz.</p>
+    <p>Ayrıca oyunun state’inde bu değişkeni kaydedebiliriz. Board’un handleClick fonksiyonunu, xIsNext değişkeninin tersini alacak şekilde ilgili değişikliği yapalım:</p>
+
+    <div class="code"> 
+        <p><code>handleClick(i) {</code></p>
+        <p><code>const squares = this.state.squares.slice();</code></p>
+        <p><code>squares[i] = this.state.xIsNext ? 'X' : 'O';</code></p>
+        <p><code>this.setState({</code></p>
+        <p> <code>squares: squares,</code></p>
+        <p><code> xIsNext: !this.state.xIsNext,</code></p>
+        <p><code>  });</code></p>
+        <p><code>}</code></p>
+        
+        </div>
+<p>Bu değişiklik ile sayesinde, “X“‘ler ve “O“‘lar sırasıyla hamle yapabiliyor olacaklar.</p>
+<p>Ayrıca oyunda, sıradaki hamlenin kimde olduğunu gösteren metni değiştirmek için, Board’un render metodunda “status” değişkenini oluşturabiliriz:</p>
+
+<div class="code"> 
+    <p><code> render() { </code></p>
+    <p><code>const status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');</code></p>
+    <p><code>  // Kalan kısımlar değişmedi</code></p>
+    
+    </div>
+    <h2>Kazananın Belirlenmesi</h2>
+    <p>Artık sonraki oyuncuyu görüntüleyebiliyoruz. Bundan sonraki amacımız olarak, oyunun bitmesi durumunu belirtmek için, oyunun kazanıldığını ve artık başka bir hamle kalmadığını göstermemiz gerekiyor. Bunun için, kazanan oyuncuyu belirtmek amacıyla, dosyanın sonuna yardımcı bir fonksiyon ekleyebiliriz:</p>
+
+    <div class="code"> 
+    <p><code>function calculateWinner(squares) {</code></p>
+    <p><code>const lines = [</code></p>
+    <p><code>[0, 1, 2],</code></p>
+    <p><code>[3, 4, 5],</code></p>
+    <p><code>[6, 7, 8],</code></p>
+    <p><code>[0, 3, 6],</code></p>
+    <p><code>[1, 4, 7],</code></p>
+    <p><code>[2, 5, 8],</code></p>
+    <p><code>[0, 4, 8],</code></p>
+    <p><code>[2, 4, 6],</code></p>
+    <p><code>];</code></p>
+    <p><code>for (let i = 0; i < lines.length; i++) {</code></p>
+    <p><code>const [a, b, c] = lines[i];</code></p>
+    <p><code>if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {</code></p>
+    <p><code>return squares[a];</code></p>
+    <p><code>}</code></p>
+    <p><code>}</code></p>
+    <p><code>return null;</code></p>
+    <p><code>}</code></p>
+
+        </div>
+        <p>9 kareden oluşan bir dizi göz önüne alındığında, bu fonksiyon kazananı kontrol edecek ve uygun şekilde 'X', 'O' veya null döndürecektir.</p>
+<p>Board’un render fonksiyonunda, calculateWinner(squares) fonksiyonunu çağırarak, ilgili oyuncunun kazanma durumunun kontrol edilmesini sağlayabiliriz. Hamleyi yapan oyuncu kazandıysa, “Winner: X” veya “Winner: O” gibi kazananı belirten bir metin görüntüleyebiliriz.</p>
+<div class="code"> 
+    <p><code> render() {</code></p>
+    <p><code>const winner = calculateWinner(this.state.squares);</code></p>
+    <p><code>let status;</code></p>
+    <p><code>if (winner) {</code></p>    
+    <p><code>status = 'Kazanan: ' + winner;</code></p>
+    <p><code>} else {</code></p>  
+    <p><code>status = 'Sıradaki oyuncu: ' + (this.state.xIsNext ? 'X' : 'O');</code></p>
+    <p><code>}</code></p>
+     
+</div>
+<p>Son çalışma olarak, oyunda önceki hamlelere gitmeyi sağayacak olan “zamanda geriye gitme” özelliğini ekleyelim.</p>
+
+<p>Ancak, slice() fonksiyonu yardımıyla her hamleden sonra squares dizisinin kopyasını alarak immutable olarak değiştirilmesini sağladık. Bu durum bize, squares dizisinin geçmişteki her halinin kaydedebilmemize, ve halihazırda oluşan hamleler arasında gezinebilmemize imkan sağlamış oldu. </p>
+
+   <p> squares dizisinin geçmiş hallerini tutabilmek için history adında başka bir dizi oluşturabiliriz.</p>
+<p>history dizisi, oyunda ilk hamleden son hamleye kadar tahtanın tüm durumlarını barındırıyor olacaktır</p>
+
+<h2>Geçmiş Hamlelerin Görüntülenmesi</h2>
+<p>tic-tac-toe oyununun geçmişini kaydedebildiğimize göre, artık oyuncuya geçmiş hamlelerin görüntülenmesini sağlayabiliriz.</p>
+<p>map metodunu kullanarak oyunun hamle geçmişini, ekranda butonlar halinde görüntülemek için React elemanlarına map edebiliriz. Ve bu butonlara tıklayarak geçmiş hamlelere atlanmasını sağlayabiliriz.</p>
+
+<div class="code"> 
+    <p><code> const moves = history.map((step, move) => {</code></p>
+    <p><code>const desc = move ?</code></p>
+    <p><code>let status;</code></p>
+    <p><code>move + '.hamleye git' :</code></p>
+    <p><code>'Oyun başlangıcına git';</code></p>    
+    <p><code>return (</code></p>
+    <p><code> li></code></p>  
+    <p><code> button onClick={() => this.jumpTo(move)}>{desc}</button></code></p>
+    <p><code> /li></code></p>
+    <p><code>);</code></p>
+    <p><code>});</code></p>
+</div>
+<h1>Sonuç Olarak</h1>
+<p>Kendisinden de bekleyeceğiniz gibi bir tic-tac-toe oynamanızı sağlar,</p>
+<p>Bir oyuncu kazandığında bunu gösterir,</p>
+<p>Oyun ilerledikçe oyun geçmişini saklar,</p>
+<p>Oyunculara oyun geçmişini görüntüleyebilmelerini ve oyun tahtasının önceki versiyonlarına gidebilmelerini sağlar.</p>
+
+</div>
+
